@@ -7,9 +7,9 @@
 
         }
 
-        public Array[Result] Predict()
+        public BirdRecognitionResult[] Predict(IFormFile file)
         {
-
+            return new BirdRecognitionResult[0];
         }
     }
 }
