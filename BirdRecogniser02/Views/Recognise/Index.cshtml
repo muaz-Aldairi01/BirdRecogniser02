@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Recognise a bird species";
+}
+
+
+<h1>@ViewData["Title"]</h1>
+<h4>Select a photo from your device:</h4>
+<hr />
+<div>
+    <img id="previewImage" src="#" alt="Preview Image" style="width:500px;height:500px;"/>
+</div>
+<form>
+  <div>
+    <input type="file" id="fileInput" onchange="previewImage()" />
+    <input type="reset" value="Reset" onclick="resetImage()" />
+    <input type="submit" value="Recognise" />
+  </div>
+ </form>
+
+
+<script>
+    function previewImage() {
+        var preview = document.querySelector('#previewImage');
+        var file = document.querySelector('#fileInput').files[0];
+        var reader = new FileReader();
+
+        reader.addEventListener("load", function () {
+            preview.src = reader.result;
+        }, false);
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function resetImage() {
+        document.querySelector('#fileInput').value = "";
+        document.querySelector('#previewImage').src = "#";
+    }
+</script>
