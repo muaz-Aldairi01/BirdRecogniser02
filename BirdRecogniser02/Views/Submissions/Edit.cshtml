@@ -1,0 +1,70 @@
+﻿@model BirdRecogniser02.Models.Submission
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Submission</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SubmissionId" />
+            <div class="form-group">
+                <label asp-for="BirdName" class="control-label"></label>
+                <input asp-for="BirdName" class="form-control" />
+                <span asp-validation-for="BirdName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BirdInformation" class="control-label"></label>
+                <input asp-for="BirdInformation" class="form-control" />
+                <span asp-validation-for="BirdInformation" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+                <label asp-for="FileName" class="control-label"></label>
+                <input asp-for="FileName" class="form-control" />
+                <span asp-validation-for="FileName" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="BirdImage" class="control-label"></label>
+                <input asp-for="BirdImage" accept="image/*" id="fileInput" onchange="previewImage()" />
+                <span asp-validation-for="BirdImage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <h4> Uploaded Image</h4>
+        <img id="previewImage" src="#" alt="Preview Image" />
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    function previewImage() {
+        var preview = document.querySelector('#previewImage');
+        var file = document.querySelector('#fileInput').files[0];
+        var reader = new FileReader();
+
+        reader.addEventListener("load", function () {
+            preview.src = reader.result;
+        }, false);
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

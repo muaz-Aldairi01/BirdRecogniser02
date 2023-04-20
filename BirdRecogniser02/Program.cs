@@ -1,8 +1,11 @@
 using BirdRecogniser02.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<BirdRecogniser02Context>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BirdRecogniser02Context") ?? throw new InvalidOperationException("Connection string 'BirdRecogniser02Context' not found.")));
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
