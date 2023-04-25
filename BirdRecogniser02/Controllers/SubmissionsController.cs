@@ -12,13 +12,11 @@ namespace BirdRecogniser02.Controllers
 {
     public class SubmissionsController : Controller
     {
-        private readonly BirdRecogniser02Context _context;
-        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly ApplicationDbContext _context;
 
-        public SubmissionsController(BirdRecogniser02Context context, IWebHostEnvironment hostEnvironment)
+        public SubmissionsController(ApplicationDbContext context)
         {
             _context = context;
-            _hostEnvironment = hostEnvironment;
         }
 
         // GET: Submissions
@@ -26,7 +24,7 @@ namespace BirdRecogniser02.Controllers
         {
               return _context.Submission != null ? 
                           View(await _context.Submission.ToListAsync()) :
-                          Problem("Entity set 'BirdRecogniser02Context.Submission'  is null.");
+                          Problem("Entity set 'ApplicationDbContext.Submission'  is null.");
         }
 
         // GET: Submissions/Details/5
@@ -58,22 +56,10 @@ namespace BirdRecogniser02.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SubmissionId,BirdName,BirdInformation,FileName,BirdImage")] Submission submission)
+        public async Task<IActionResult> Create([Bind("SubmissionId,BirdName,BirdInformation,FileName")] Submission submission)
         {
             if (ModelState.IsValid)
             {
-                //Save image to wwwroot/image
-                string wwwRootPath = _hostEnvironment.WebRootPath;
-                string fileName = Path.GetFileNameWithoutExtension(submission.BirdImage.FileName);
-                string extension = Path.GetExtension(submission.BirdImage.FileName);
-                // should make file name uniqe
-                submission.FileName = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                string path = Path.Combine(wwwRootPath + "/Image/", fileName);
-                using (var fileStream = new FileStream(path, FileMode.Create))
-                {
-                    await submission.BirdImage.CopyToAsync(fileStream);
-                }
-                //Insert record
                 _context.Add(submission);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -102,7 +88,7 @@ namespace BirdRecogniser02.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SubmissionId,BirdName,BirdInformation,FileName,BirdImage")] Submission submission)
+        public async Task<IActionResult> Edit(int id, [Bind("SubmissionId,BirdName,BirdInformation,FileName")] Submission submission)
         {
             if (id != submission.SubmissionId)
             {
@@ -113,16 +99,6 @@ namespace BirdRecogniser02.Controllers
             {
                 try
                 {
-                    //Save image to wwwroot/image
-                    string wwwRootPath = _hostEnvironment.WebRootPath;
-                    string fileName = Path.GetFileNameWithoutExtension(submission.BirdImage.FileName);
-                    string extension = Path.GetExtension(submission.BirdImage.FileName);
-                    submission.FileName=fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                    string path = Path.Combine(wwwRootPath + "/Image/", fileName);
-                    using (var fileStream = new FileStream(path, FileMode.Create))
-                    {
-                        await submission.BirdImage.CopyToAsync(fileStream);
-                    }
                     _context.Update(submission);
                     await _context.SaveChangesAsync();
                 }
@@ -167,19 +143,14 @@ namespace BirdRecogniser02.Controllers
         {
             if (_context.Submission == null)
             {
-                return Problem("Entity set 'BirdRecogniser02Context.Submission'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Submission'  is null.");
             }
             var submission = await _context.Submission.FindAsync(id);
             if (submission != null)
             {
                 _context.Submission.Remove(submission);
             }
-
-            //delete image from wwwroot/image
-            var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "image", submission.FileName);
-            if (System.IO.File.Exists(imagePath))
-                System.IO.File.Delete(imagePath);
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

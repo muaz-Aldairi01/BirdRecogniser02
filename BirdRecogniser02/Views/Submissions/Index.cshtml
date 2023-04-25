@@ -21,9 +21,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.FileName)
             </th>
-            <th>
-                Bird Image
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -38,9 +35,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FileName)
-            </td>
-            <td>
-                 <img decoding="async" src="@("~/image/"+item.FileName)" asp-append-version="true" width="75px" height="75px" />
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.SubmissionId">Edit</a> |
