@@ -24,6 +24,9 @@
             <th>
                 Bird Image
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -41,11 +44,33 @@
             <td>
                 <img decoding="async" src="@("~/photos/"+item.FileName)" asp-append-version="true" width="75px" height="75px" />
             </td>
-            <td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @if ((await AuthorizationService.AuthorizeAsync(
+                   User, item,
+                   SubmissionOperations.Update)).Succeeded)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.SubmissionId">Edit</a>
+                        <text> | </text>
+                    }
+
+                    <a asp-action="Details" asp-route-id="@item.SubmissionId">Details</a>
+
+                    @if ((await AuthorizationService.AuthorizeAsync(
+                   User, item,
+                   SubmissionOperations.Delete)).Succeeded)
+                    {
+                        <text> | </text>
+                        <a asp-action="Delete" asp-route-id="@item.SubmissionId">Delete</a>
+                    }
+                </td>
+            @*<td>
                 <a asp-action="Edit" asp-route-id="@item.SubmissionId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.SubmissionId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.SubmissionId">Delete</a>
-            </td>
+            </td>*@
         </tr>
 }
     </tbody>

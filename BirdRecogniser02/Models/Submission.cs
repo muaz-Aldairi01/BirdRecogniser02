@@ -9,6 +9,9 @@ namespace BirdRecogniser02.Models
         [Key]
         public int SubmissionId { get; set; }
 
+        // user ID from AspNetUser table.
+        public string? OwnerID { get; set; }
+
         [Required]
         [DisplayName("Bird Name")]
         [StringLength(50, MinimumLength = 3)]
@@ -30,5 +33,14 @@ namespace BirdRecogniser02.Models
         [DisplayName("Bird Image")]
         public IFormFile? BirdImage { get; set; }
 
+        public SubmissionStatus Status { get; set; }
+
+    }
+
+    public enum SubmissionStatus
+    {
+        Submitted,
+        Approved,
+        Rejected
     }
 }

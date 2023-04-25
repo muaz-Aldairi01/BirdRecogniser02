@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using BirdRecogniser02.Data;
 using BirdRecogniser02.Models;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using BirdRecogniser02.Authorization;
 
 namespace BirdRecogniser02.Controllers
 {
@@ -15,17 +18,39 @@ namespace BirdRecogniser02.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
-
-        public SubmissionsController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
+        private readonly IAuthorizationService _authorizationService;
+        private readonly UserManager<IdentityUser> _userManager;
+        public SubmissionsController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment, IAuthorizationService authorizationService, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _hostEnvironment = hostEnvironment;
+            _authorizationService = authorizationService;
+            _userManager = userManager;
         }
 
         // GET: Submissions
         public async Task<IActionResult> Index()
         {
-              return _context.Submission != null ? 
+
+            //-----------------------------------------------------
+            var submissions = from s in _context.Submission
+                              select s;
+
+            var isAuthorized = User.IsInRole(Constants.SubmissionManagersRole) ||
+                               User.IsInRole(Constants.SubmissionAdministratorsRole);
+
+            var currentUserId = _userManager.GetUserId(User);
+
+            // Only approved contacts are shown UNLESS you're authorized to see them
+            // or you are the owner.
+            if (!isAuthorized)
+            {
+                submissions = submissions.Where(s => s.Status == SubmissionStatus.Approved
+                                            || s.OwnerID == currentUserId);
+            }
+
+            //-----------------------------------------------------------------------
+            return _context.Submission != null ? 
                           View(await _context.Submission.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Submission'  is null.");
         }
@@ -45,9 +70,59 @@ namespace BirdRecogniser02.Controllers
                 return NotFound();
             }
 
+            //-----------------------------------------------------------
+            var isAuthorized = User.IsInRole(Constants.SubmissionManagersRole) ||
+                           User.IsInRole(Constants.SubmissionAdministratorsRole);
+
+            var currentUserId = _userManager.GetUserId(User);
+
+            if (!isAuthorized
+                && currentUserId != submission.OwnerID
+                && submission.Status != SubmissionStatus.Approved)
+            {
+                return Forbid();
+            }
+            //-----------------------------------------------------------
+
+            return View(submission);
+        }
+        //------------------------------------------------------------------------------
+
+        //// POST: Submissions/Details
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Details(int? id, SubmissionStatus status)
+        {
+            var submission = await _context.Submission.FirstOrDefaultAsync(m => m.SubmissionId == id);
+
+            if (submission == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var submissionOperation = (status == SubmissionStatus.Approved)
+                                                   ? SubmissionOperations.Approve
+                                                   : SubmissionOperations.Reject;
+
+                var isAuthorized = await _authorizationService.AuthorizeAsync(User, submission,
+                                            submissionOperation);
+                if (!isAuthorized.Succeeded)
+                {
+                    return Forbid();
+                }
+                submission.Status = status;
+
+                _context.Submission.Update(submission);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
             return View(submission);
         }
 
+
+        //------------------------------------------------------------------------------
         // GET: Submissions/Create
         public IActionResult Create()
         {
@@ -59,7 +134,7 @@ namespace BirdRecogniser02.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SubmissionId,BirdName,BirdInformation,FileName,BirdImage")] Submission submission)
+        public async Task<IActionResult> Create([Bind("SubmissionId,OwnerID,BirdName,BirdInformation,FileName,BirdImage,Status")] Submission submission)
         {
             if (ModelState.IsValid)
             {
@@ -73,6 +148,18 @@ namespace BirdRecogniser02.Controllers
                 {
                     await submission.BirdImage.CopyToAsync(fileStream);
                 }
+
+                //--------------------------------------------------------
+                submission.OwnerID = _userManager.GetUserId(User);
+
+                var isAuthorized = await _authorizationService.AuthorizeAsync(
+                                                            User, submission,
+                                                            SubmissionOperations.Create);
+                if (!isAuthorized.Succeeded)
+                {
+                    return Forbid();
+                }
+                //------------------------------------------------------------------------
                 _context.Add(submission);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -93,6 +180,17 @@ namespace BirdRecogniser02.Controllers
             {
                 return NotFound();
             }
+            //----------------------------------------------------------
+            // you may need to add two more perameters to get method (bind and submission)
+            var isAuthorized = await _authorizationService.AuthorizeAsync(
+                                                  User, submission,
+                                                  SubmissionOperations.Update);
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
+
+            //-------------------------------------------------------------------
             return View(submission);
         }
 
@@ -101,7 +199,7 @@ namespace BirdRecogniser02.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SubmissionId,BirdName,BirdInformation,FileName,BirdImage")] Submission submission)
+        public async Task<IActionResult> Edit(int id, [Bind("SubmissionId,OwnerID,BirdName,BirdInformation,FileName,BirdImage,Status")] Submission submission)
         {
             if (id != submission.SubmissionId)
             {
@@ -122,6 +220,36 @@ namespace BirdRecogniser02.Controllers
                     {
                         await submission.BirdImage.CopyToAsync(fileStream);
                     }
+
+                    //------------------------------------------------------------------
+
+                    var isAuthorized = await _authorizationService.AuthorizeAsync(
+                                                 User, submission,
+                                                 SubmissionOperations.Update);
+                    if (!isAuthorized.Succeeded)
+                    {
+                        return Forbid();
+                    }
+
+                    _context.Attach(submission).State = EntityState.Modified;
+
+                    if (submission.Status == SubmissionStatus.Approved)
+                    {
+                        // If the contact is updated after approval, 
+                        // and the user cannot approve,
+                        // set the status back to submitted so the update can be
+                        // checked and approved.
+                        var canApprove = await _authorizationService.AuthorizeAsync(User,
+                                                submission,
+                                                SubmissionOperations.Approve);
+
+                        if (!canApprove.Succeeded)
+                        {
+                            submission.Status = SubmissionStatus.Submitted;
+                        }
+                    }
+
+                    //--------------------------------------------------------------------
 
                     _context.Update(submission);
                     await _context.SaveChangesAsync();
@@ -156,7 +284,16 @@ namespace BirdRecogniser02.Controllers
             {
                 return NotFound();
             }
+            //--------------------------------------------------------------------
+            var isAuthorized = await _authorizationService.AuthorizeAsync(
+                                                 User, submission,
+                                                 SubmissionOperations.Delete);
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
 
+            //----------------------------------------------------------------------
             return View(submission);
         }
 
@@ -174,7 +311,15 @@ namespace BirdRecogniser02.Controllers
             {
                 _context.Submission.Remove(submission);
             }
-
+            //--------------------------------------------------------------------------
+            var isAuthorized = await _authorizationService.AuthorizeAsync(
+                                                 User, submission,
+                                                 SubmissionOperations.Delete);
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
+            //--------------------------------------------------------------------------
             //delete image from wwwroot/image
             var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "photos", submission.FileName);
             if (System.IO.File.Exists(imagePath))
