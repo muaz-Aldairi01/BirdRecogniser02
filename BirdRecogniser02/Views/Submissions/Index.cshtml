@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<BirdRecogniser02.Models.Submission>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Submissions List";
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Submit new bird species</a>
 </p>
 <table class="table">
     <thead>
@@ -26,6 +26,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                Your options
             </th>
         </tr>
     </thead>
@@ -66,11 +69,7 @@
                         <a asp-action="Delete" asp-route-id="@item.SubmissionId">Delete</a>
                     }
                 </td>
-            @*<td>
-                <a asp-action="Edit" asp-route-id="@item.SubmissionId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.SubmissionId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.SubmissionId">Delete</a>
-            </td>*@
+            
         </tr>
 }
     </tbody>

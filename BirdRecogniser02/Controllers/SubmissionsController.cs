@@ -33,7 +33,7 @@ namespace BirdRecogniser02.Controllers
         {
 
             //-----------------------------------------------------
-            var submissions = from s in _context.Submission
+            var submission = from s in _context.Submission
                               select s;
 
             var isAuthorized = User.IsInRole(Constants.SubmissionManagersRole) ||
@@ -45,14 +45,18 @@ namespace BirdRecogniser02.Controllers
             // or you are the owner.
             if (!isAuthorized)
             {
-                submissions = submissions.Where(s => s.Status == SubmissionStatus.Approved
-                                            || s.OwnerID == currentUserId);
+                submission = submission.Where(s => s.Status == SubmissionStatus.Approved ||
+                                             s.OwnerID == currentUserId);
             }
 
             //-----------------------------------------------------------------------
-            return _context.Submission != null ? 
-                          View(await _context.Submission.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Submission'  is null.");
+            //return _context.Submission != null ? 
+            //              View(await _context.Submission.ToListAsync()) :
+            //              Problem("Entity set 'ApplicationDbContext.Submission'  is null.");
+
+            return submission != null ?
+                   View(await submission.ToListAsync()) :
+                   Problem("Entity set 'ApplicationDbContext.Submission'  is null.");
         }
 
         // GET: Submissions/Details/5
@@ -223,14 +227,21 @@ namespace BirdRecogniser02.Controllers
 
                     //------------------------------------------------------------------
 
+                    var existingSubmission = await _context.Submission.AsNoTracking().FirstOrDefaultAsync(m => m.SubmissionId == id);
+
+                    if (existingSubmission == null)
+                    {
+                        return NotFound();
+                    }
+
                     var isAuthorized = await _authorizationService.AuthorizeAsync(
-                                                 User, submission,
+                                                 User, existingSubmission,
                                                  SubmissionOperations.Update);
                     if (!isAuthorized.Succeeded)
                     {
                         return Forbid();
                     }
-
+                     submission.OwnerID = existingSubmission.OwnerID;
                     _context.Attach(submission).State = EntityState.Modified;
 
                     if (submission.Status == SubmissionStatus.Approved)
