@@ -9,9 +9,11 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BirdRecogniser02.Controllers
 {
+    [AllowAnonymous]
     public class RecogniseDemoController : Controller
     {
 

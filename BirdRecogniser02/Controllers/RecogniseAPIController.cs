@@ -1,5 +1,6 @@
 ﻿using BirdRecogniser02.ImageHelpers;
 using BirdRecogniser02.ML.DataModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.ML;
@@ -9,6 +10,7 @@ namespace BirdRecogniser02.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class RecogniseAPIController : ControllerBase
     {
 
