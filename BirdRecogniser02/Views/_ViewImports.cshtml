@@ -1,3 +1,7 @@
 ﻿@using BirdRecogniser02
 @using BirdRecogniser02.Models
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using BirdRecogniser02.Authorization;
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
