@@ -1,8 +1,14 @@
 using BirdRecogniser02.Authorization;
 using BirdRecogniser02.Data;
+using BirdRecogniser02.ML;
+using BirdRecogniser02.ML.DataModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.ML;
+using Microsoft.ML;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +23,22 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
+
+/////////////////////////////////////////////////////////////////
+//Configure the ML.NET model for the pre-trained TensorFlow model.
+string _tensorFlowModelFilePath = GetAbsolutePath(builder.Configuration["MLModel:TensorFlowModelFilePath"]);
+var tensorFlowModelConfigurator = new TensorFlowModelConfigurator(_tensorFlowModelFilePath);
+ITransformer _mlnetModel = tensorFlowModelConfigurator.Model;
+/////////////////////////////////////////////////////////////////////////////
+// Register the PredictionEnginePool as a service in the IoC container for DI.
+//
+builder.Services.AddPredictionEnginePool<ImageInputData, ImageLabelPrediction>();
+builder.Services.AddOptions<PredictionEnginePoolOptions<ImageInputData, ImageLabelPrediction>>()
+    .Configure(options =>
+    {
+        options.ModelLoader = new InMemoryModelLoader(_mlnetModel);
+    });
+    
 builder.Services.AddAuthorization(options =>
 {
     options.FallbackPolicy = new AuthorizationPolicyBuilder()
@@ -77,3 +99,12 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
+
+string GetAbsolutePath(string relativePath)
+{
+    var _dataRoot = new FileInfo(typeof(Program).Assembly.Location);
+    string assemblyFolderPath = _dataRoot.Directory.FullName;
+
+    string fullPath = Path.Combine(assemblyFolderPath, relativePath);
+    return fullPath;
+}
