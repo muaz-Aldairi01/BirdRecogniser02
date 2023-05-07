@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Result";
+}
+<div class="col-md-12 p-0">
+    <div class="result-banner-content position-relative">
+        <img src="~/image/ResultBg.jpg" class="banner-image" alt="banner">
+        <div class="banner-text position-absolute top-50 start-50 translate-middle text-center">
+            <h1>The result of recognition</h1>
+
+            <h2 class="p-1">Predicted label is: @ViewData["Prediction"]</h2>
+            <h2>Probability: @ViewData["Probability"]%</h2>
+        </div>
+        
+    </div>
+</div>
+
+
+

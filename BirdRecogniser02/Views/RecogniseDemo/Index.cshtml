@@ -1,0 +1,150 @@
+﻿<!-- HTML -->
+<div class="col-md-12 p-0">
+    <div class="Recognise-banner-content position-relative">
+        <img src="~/image/Recognise banner 1.jpg" class="banner-image" alt="banner">
+        <div class="banner-text position-absolute top-50 start-50 translate-middle text-center">
+            <h1>Start your journey of identification</h1>
+            <h2 class="p-3">Select your image from your device</h2>
+            <label for="fileInput" class="custom-file-label">Add an image ></label>
+            <input type="file" name="imageFile" id="fileInput" class="custom-file-input" onchange="openCropModal()" style="display: none;">
+        </div>
+    </div>
+</div>
+<div id="divPrediction" hidden></div>
+<div id="divProbability"  hidden></div>
+<img id="croppedImage" hidden/>
+<div class="clearfix"></div>
+<!-- The Modal -->
+<div class="modal fade" id="cropModal" tabindex="-1" role="dialog" aria-labelledby="cropModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="cropModalLabel">Crop Image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="image-container">
+                    <img id="imageToCrop" src="#" alt="Preview Image" />
+                </div>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="recogniseCroppedImage()">Recognise</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    window.onload = function hello() {
+        document.getElementById('divPrediction').innerHTML = ""; //'Area to show the awesome prediction!';
+    };
+    let cropper;
+    // Cropper photo
+    document.getElementById('cropModal').addEventListener('shown.bs.modal', function () {
+        if (cropper) {
+            cropper.destroy();
+        }
+
+        const preview = document.querySelector('#imageToCrop');
+        cropper = new Cropper(preview, {
+            aspectRatio: 1,
+            viewMode: 3,
+            autoCropArea: 1,
+            cropBoxResizable: false,
+            minCanvasWidth: 224,
+            minCanvasHeight: 224,
+            minCropBoxWidth: 224,
+            minCropBoxHeight: 224,
+            toggleDragModeOnDblclick: false,
+            responsive: true,
+            checkCrossOrigin: false,
+            checkOrientation: false,
+        });
+    });
+
+    function openCropModal() {
+        var file = document.querySelector('#fileInput').files[0];
+        var reader = new FileReader();
+
+        reader.addEventListener("load", function () {
+            var preview = document.querySelector('#imageToCrop');
+            preview.src = reader.result;
+
+            // Show crop modal
+            $('#cropModal').modal('show');
+        }, false);
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function recogniseCroppedImage() {
+
+        
+        const serviceUrl = 'api/RecogniseAPI/classifyImage';
+        if (cropper) {
+            // Get cropped image data
+            const croppedCanvas = cropper.getCroppedCanvas();
+            const croppedImageDataUrl = croppedCanvas.toDataURL();
+
+            //storage the cropped image
+            //sessionStorage.setItem('croppedImageDataUrl', croppedImageDataUrl);
+
+            // Convert the data URL to a Blob object
+            const croppedImageBlob = dataURLToBlob(croppedImageDataUrl);
+
+            // Create a new FormData object and append the cropped image Blob
+            const formData = new FormData();
+            formData.append('imageFile', croppedImageBlob);
+
+            // Send the FormData object to the API and process the response
+            // Send the FormData object to the API and process the response
+            fetch(serviceUrl, {
+                method: 'POST',
+                body: formData
+            })
+                .then((resp) => resp.json())
+                .then(function (response) {
+                    console.info('Response', response);
+                    console.log('Response', response);
+
+                    document.getElementById('divPrediction').innerHTML =
+                        'Predicted label is: ' + response.predictedLabel;
+                    document.getElementById('divProbability').innerHTML =
+                        'Probability is: ' + (response.probability * 100).toFixed(3) + '%';
+
+                    // Redirect to Result view with predicted label as parameter
+                    window.location.href = "/Result?prediction=" + response.predictedLabel + "&probability=" + (response.probability * 100).toFixed(3);
+
+
+                });
+
+
+
+            // Close the modal
+            $('#cropModal').modal('hide');
+
+            console.log(sessionStorage.getItem('croppedImageDataUrl'));
+        }
+    }
+    function dataURLToBlob(dataUrl) {
+        const byteString = atob(dataUrl.split(',')[1]);
+        const mimeString = dataUrl.split(',')[0].split(':')[1].split(';')[0];
+        const buffer = new ArrayBuffer(byteString.length);
+        const view = new Uint8Array(buffer);
+
+        for (let i = 0; i < byteString.length; i++) {
+            view[i] = byteString.charCodeAt(i);
+        }
+
+        return new Blob([buffer], { type: mimeString });
+    }
+
+
+</script>
