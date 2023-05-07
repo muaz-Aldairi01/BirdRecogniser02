@@ -24,18 +24,26 @@ form.addEventListener('submit', e => {
     fetch(serviceUrl, {
         method: 'POST',
         body: formData
-    }).then((resp) => resp.json())
+    })
+        .then((resp) => resp.json())
         .then(function (response) {
             console.info('Response', response);
             console.log('Response', response);
 
-            //alert('Prediction is: ' + 'Label: ' + response.predictedLabel + ' Probability: ' + response.probability);
+            
+            document.getElementById('divPrediction0').innerHTML = response[0].predictedLabel;
+            document.getElementById('divProbability0').innerHTML = (response[0].probability * 100).toFixed(2) + "%";
 
-            document.getElementById('divPrediction').innerHTML = "Predicted label is: " + response.predictedLabel;
-            document.getElementById('divProbability').innerHTML = "Probability is: " + (response.probability * 100).toFixed(3) + "%";
+            document.getElementById('divPrediction1').innerHTML = response[1].predictedLabel;
+            document.getElementById('divProbability1').innerHTML = (response[1].probability * 100).toFixed(2) + "%";
 
+            document.getElementById('divPrediction2').innerHTML = response[2].predictedLabel;
+            document.getElementById('divProbability2').innerHTML = (response[2].probability * 100).toFixed(2) + "%";
+            
             return response;
         });
+            
+            
 
 
 });

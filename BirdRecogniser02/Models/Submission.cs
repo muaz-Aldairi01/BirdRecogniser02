@@ -28,7 +28,7 @@ namespace BirdRecogniser02.Models
         [DisplayName("File Name")]
         public string? FileName { get; set; }
 
-        [Required]
+        //[Required]// this attribute should be enabled once Zong create a form that send an image
         [NotMapped]
         [DisplayName("Bird Image")]
         public IFormFile? BirdImage { get; set; }
