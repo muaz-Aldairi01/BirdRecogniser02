@@ -39,9 +39,41 @@
     </div>
 </div>
 
+<h4 id="result_title">Predicted Bird species:</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Label</th>
+            <th>Probability</th>
+        </tr>
+    </thead>
+    <tbody>
+      <tr>
+            <td id="divPrediction0"></td>
+            <td id="divProbability0"></td>
+      </tr>
+      <tr>
+            <td id="divPrediction1"></td>
+            <td id="divProbability1"></td>
+      </tr>
+        <tr>
+            <td id="divPrediction2"></td>
+            <td id="divProbability2"></td>
+        </tr>
+    </tbody>
+</table>
+
+<script src="~/js/upload.js"></script>
+
+<br />
+<br />
+<br />
+
 <script type="text/javascript">
     window.onload = function hello() {
-        document.getElementById('divPrediction').innerHTML = ""; //'Area to show the awesome prediction!';
+        document.getElementById('divPrediction').innerHTML = "";
+        
     };
     let cropper;
     // Cropper photo
