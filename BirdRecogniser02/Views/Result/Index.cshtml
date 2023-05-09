@@ -4,15 +4,20 @@
 <div class="col-md-12 p-0">
     <div class="result-banner-content position-relative">
         <img src="~/image/ResultBg.jpg" class="banner-image" alt="banner">
-        <div class="banner-text position-absolute top-50 start-50 translate-middle text-center">
+        <div class="banner-text position-relative top-0 start-50 translate-middle text-center">
             <h1>The result of recognition</h1>
-
-            <h2 class="p-1">Predicted label is: @ViewData["Prediction"]</h2>
-            <h2>Probability: @ViewData["Probability"]%</h2>
+            <img class="predict-image position-relative" src="@ViewData["CroppedImageDataUrl"]" alt="Cropped Image" />
+            <p class="p-1">Predicted label is: @ViewData["Prediction0"]</p>
+            <p>Probability: @ViewData["Probability0"]%</p>
+            <p class="p-1">Predicted label is: @ViewData["Prediction1"]</p>
+            <p>Probability: @ViewData["Probability1"]%</p>
+            <p class="p-1">Predicted label is: @ViewData["Prediction2"]</p>
+            <p>Probability: @ViewData["Probability2"]%</p>
         </div>
         
     </div>
 </div>
+
 
 
 
