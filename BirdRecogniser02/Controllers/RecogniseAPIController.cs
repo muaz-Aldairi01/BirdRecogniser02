@@ -1,7 +1,6 @@
 ﻿using BirdRecogniser02.ImageHelpers;
 using BirdRecogniser02.ML.DataModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.ML;
 using System.Drawing;
@@ -27,6 +26,7 @@ namespace BirdRecogniser02.Controllers
             _labelsFilePath = Path.Combine(configuration["MLModel:LabelsFilePath"]);
 
             _logger = logger;
+
         }
 
         [HttpPost]
@@ -89,18 +89,36 @@ namespace BirdRecogniser02.Controllers
 
             float[] probabilities = imageLabelPredictions.PredictedLabels;
 
+            //========================================================
+            
+            List<string> columnValues = new List<string>();
+
+            using (var reader = new StreamReader("wwwroot/general/general.csv"))
+            {
+               
+
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(',');
+                    columnValues.Add(values[1]); 
+                }    
+            }
+            string[] generalInfos = columnValues.ToArray();
+            //========================================================
 
             var imageBest3LabelsPrediction = new List<ImagePredictedLabelWithProbability>(3);
             for (int i = 0; i < 3; i++)
             {
-                (string predictedLabel, float probability) = GetBestLabel(labels, probabilities);
+                (string predictedLabel, float probability, string generalInfo) = GetBestLabel(labels, probabilities,generalInfos);
                 if (probability < 0.01)
                     break;
                 var imageLabelPrediction = new ImagePredictedLabelWithProbability
                 {
                     ImageId = imageInputData.GetHashCode().ToString(),
                     PredictedLabel = predictedLabel,
-                    Probability = probability
+                    Probability = probability,
+                    GeneralInfo = generalInfo
                 };
                 imageBest3LabelsPrediction.Add(imageLabelPrediction);
                 // Set the probability of the predicted label to 0 so that we can get the next best label in the next iteration.
@@ -110,34 +128,12 @@ namespace BirdRecogniser02.Controllers
             return imageBest3LabelsPrediction;
         }
 
-        //===========================================================================
-
-        //private ImagePredictedLabelWithProbability FindBestLabelWithProbability(ImageLabelPrediction imageLabelPredictions, ImageInputData imageInputData)
-        //    {
-        //        // Read TF model's labels (labels.txt) to classify the image across those labels.
-        //        var labels = ReadLabels(_labelsFilePath);
-
-        //        float[] probabilities = imageLabelPredictions.PredictedLabels;
-
-        //        // Set a single label as predicted or even none if probabilities were lower than 70%.
-        //        var imageBestLabelPrediction = new ImagePredictedLabelWithProbability()
-        //        {
-        //            ImageId = imageInputData.GetHashCode().ToString(), //This ID is not really needed, it could come from the application itself, etc.
-        //        };
-
-        //        (imageBestLabelPrediction.PredictedLabel, imageBestLabelPrediction.Probability) = GetBestLabel(labels, probabilities);
-
-        //        return imageBestLabelPrediction;
-        //    }
-
-
-
-        private (string, float) GetBestLabel(string[] labels, float[] probs)
+        private (string, float,string) GetBestLabel(string[] labels, float[] probs, string[] infos)
         {
             var max = probs.Max();
             var index = probs.AsSpan().IndexOf(max);
 
-            return (labels[index], max);
+            return (labels[index], max, infos[index+1]);
         }
 
         private string[] ReadLabels(string labelsLocation)
@@ -160,5 +156,6 @@ namespace BirdRecogniser02.Controllers
         {
             return new string[] { "ACK Heart beat 1", "ACK Heart beat 2" };
         }
+
     }
 }
