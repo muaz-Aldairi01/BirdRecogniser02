@@ -33,12 +33,15 @@ form.addEventListener('submit', e => {
             
             document.getElementById('divPrediction0').innerHTML = response[0].predictedLabel;
             document.getElementById('divProbability0').innerHTML = (response[0].probability * 100).toFixed(2) + "%";
+            document.getElementById('divGeneralInf0').innerHTML = response[0].generalInfo;
 
             document.getElementById('divPrediction1').innerHTML = response[1].predictedLabel;
             document.getElementById('divProbability1').innerHTML = (response[1].probability * 100).toFixed(2) + "%";
+            document.getElementById('divGeneralInf1').innerHTML = response[1].generalInfo;
 
             document.getElementById('divPrediction2').innerHTML = response[2].predictedLabel;
             document.getElementById('divProbability2').innerHTML = (response[2].probability * 100).toFixed(2) + "%";
+            document.getElementById('divGeneralInf2').innerHTML = response[2].generalInfo;
             
             return response;
         });
