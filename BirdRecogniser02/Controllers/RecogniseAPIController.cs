@@ -10,7 +10,6 @@ namespace BirdRecogniser02.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class RecogniseAPIController : ControllerBase
     {
 
@@ -33,6 +32,8 @@ namespace BirdRecogniser02.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [Route("classifyimage")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> ClassifyImage(IFormFile imageFile)
         {
             if (imageFile.Length == 0)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace BirdRecogniser02.Controllers
@@ -6,6 +7,7 @@ namespace BirdRecogniser02.Controllers
         public class ResultController : Controller
         {
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult Index(string prediction0, string probability0, string prediction1, string probability1, string prediction2, string probability2, string croppedImageDataUrl)
         {
             ViewData["Prediction0"] = prediction0;

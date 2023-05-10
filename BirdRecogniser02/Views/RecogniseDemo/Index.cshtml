@@ -11,7 +11,7 @@
     </div>
 </div>
 <!-- form for submit the data -->
-<form id="resultForm" action="/Result" method="post" style="display: none;">
+<form id="resultForm" action="/Result" method="post" style="display: none;" enctype="multipart/form-data">
     <input type="hidden" id="prediction0" name="prediction0" />
     <input type="hidden" id="probability0" name="probability0" />
     <input type="hidden" id="prediction1" name="prediction1" />
@@ -113,24 +113,25 @@
 
             // Send the FormData object to the API and process the response
             // Send the FormData object to the API and process the response
+            // Send the FormData object to the API and process the response
             fetch(serviceUrl, {
                 method: 'POST',
                 body: formData
             })
                 .then((resp) => resp.json())
                 .then(function (response) {
-                    // Set the values of form fields
-                    document.getElementById('prediction0').value = response[0].predictedLabel;
-                    document.getElementById('probability0').value = (response[0].probability * 100).toFixed(2) + "%";
-                    document.getElementById('prediction1').value = response[1].predictedLabel;
-                    document.getElementById('probability1').value = (response[1].probability * 100).toFixed(2) + "%";
-                    document.getElementById('prediction2').value = response[2].predictedLabel;
-                    document.getElementById('probability2').value = (response[2].probability * 100).toFixed(2) + "%";
+                    const predictionsCount = response.length;
+                    for (let i = 0; i < predictionsCount; i++) {
+                        document.getElementById(`prediction${i}`).value = response[i].predictedLabel;
+                        document.getElementById(`probability${i}`).value = (response[i].probability * 100).toFixed(2) + "%";
+                    }
+
                     document.getElementById('croppedImageDataUrl').value = croppedImageDataUrl;
 
                     // submit the form
                     document.getElementById('resultForm').submit();
-                })
+                });
+
 
 
             // Close the modal
