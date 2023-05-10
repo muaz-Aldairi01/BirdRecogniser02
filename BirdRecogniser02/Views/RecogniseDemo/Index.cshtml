@@ -14,10 +14,13 @@
 <form id="resultForm" action="/Result" method="post" style="display: none;" enctype="multipart/form-data">
     <input type="hidden" id="prediction0" name="prediction0" />
     <input type="hidden" id="probability0" name="probability0" />
+    <input type="hidden" id="generalInf0" name="generalInf0" />
     <input type="hidden" id="prediction1" name="prediction1" />
     <input type="hidden" id="probability1" name="probability1" />
+    <input type="hidden" id="generalInf1" name="generalInf1" />
     <input type="hidden" id="prediction2" name="prediction2" />
     <input type="hidden" id="probability2" name="probability2" />
+    <input type="hidden" id="generalInf2" name="generalInf2" />
     <input type="hidden" id="croppedImageDataUrl" name="croppedImageDataUrl" />
 </form>
 
@@ -124,6 +127,7 @@
                     for (let i = 0; i < predictionsCount; i++) {
                         document.getElementById(`prediction${i}`).value = response[i].predictedLabel;
                         document.getElementById(`probability${i}`).value = (response[i].probability * 100).toFixed(2) + "%";
+                        document.getElementById(`generalInf${i}`).value = response[i].generalInfo;
                     }
 
                     document.getElementById('croppedImageDataUrl').value = croppedImageDataUrl;
