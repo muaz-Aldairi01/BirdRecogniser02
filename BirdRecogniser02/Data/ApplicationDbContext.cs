@@ -11,5 +11,10 @@ namespace BirdRecogniser02.Data
         {
         }
         public DbSet<BirdRecogniser02.Models.Submission> Submission { get; set; } = default!;
+
+        public void ListAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
