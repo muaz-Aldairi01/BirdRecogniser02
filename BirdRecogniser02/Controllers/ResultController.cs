@@ -17,6 +17,7 @@ namespace BirdRecogniser02.Controllers
             ViewData["Prediction1"] = prediction1;
             ViewData["Probability1"] = probability1;
             ViewData["GeneralInf1"] = generalInf1;
+
             ViewData["Prediction2"] = prediction2;
             ViewData["Probability2"] = probability2;
             ViewData["GeneralInf2"] = generalInf2;
