@@ -4,13 +4,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - BirdRecogniser02</title>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BirdRecogniser02.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
 </head>
-<body>
+<body class="m-0">
     <header>
-        <nav class="navbar navbar-expand-md navbar-toggleable-md bg-white border-bottom box-shadow">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-lg bg-white border-bottom box-shadow">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">
                     <img src="~/image/logo2.png" alt="Logo" width="100%">
@@ -19,32 +23,28 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-md-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-
-                            <a class="nav-link text-dark" asp-area="" asp-controller="RecogniseDemo" asp-action="Index">Recognise</a>
+                            <a class="nav-link" asp-area="" asp-controller="RecogniseDemo" asp-action="Index">Recognise</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Submissions" asp-action="Index">Contribute</a>
-
+                            <a class="nav-link" asp-area="" asp-controller="Submissions" asp-action="Index">Contribute</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Mobile">Get App</a>
                         </li>
                         <li class="nav-item">
-
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a>
                         </li>
                         @*<li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>*@
-
                     </ul>
-
+                    <partial name="_LoginPartial"   />
                 </div>
             </div>
         </nav>
@@ -59,7 +59,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container-fluid text-center">
-            Made with ♡ in Wellington© 2023 Bird Recogniser 
+            Made with ♡ in Wellington© 2023 Bird Recogniser
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

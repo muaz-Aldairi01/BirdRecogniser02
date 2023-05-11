@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Result";
+    var probability0 = float.Parse(ViewData["Probability0"].ToString().TrimEnd('%')) / 100;
+}
+<div class="col-md-12 p-0">
+    <div class="result-banner-content">
+        @*<div class="banner-image-result">
+        <img src="~/image/ResultBg.jpg" class="img-fluid" alt="banner" />
+        </div>*@
+        <div class="banner-text-result p-5">
+            <h1 class="text-center pb-3 topic-result">The result of recognition</h1>
+            <div class="row g-inf g-3">
+                <div class="img-info col-md-3">
+                    <img class="predict-image" src="@ViewData["CroppedImageDataUrl"]" alt="Cropped Image" />
+                </div>
+                <div class="g-inf-content col-md-9 ">
+                    <p class="bird-name">Possible bird species: @ViewData["Prediction0"]</p>
+                    <p class="bird-probability">Probability: @ViewData["Probability0"]</p>
+                    <p>General Information: @ViewData["GeneralInf0"]</p>
+                    <hr />
+                    @if (probability0 < 0.8)
+                    {
+                        <p class="bird-name">Possible bird species: @ViewData["Prediction1"]</p>
+                        <p class="bird-probability">Probability: @ViewData["Probability1"]</p>
+                        <p>General Information: @ViewData["GeneralInf1"]</p>
+                        <hr />
+                        <p class="bird-name">Predicted label is: @ViewData["Prediction2"]</p>
+                        <p class="bird-probability">Probability: @ViewData["Probability2"]</p>
+                        <p>General Information: @ViewData["GeneralInf2"]</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
