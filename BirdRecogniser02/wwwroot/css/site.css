@@ -55,16 +55,33 @@ html {
         padding-top: 5px !important;
     }
 
+    .custom-file-label {
+        font-size: 18px !important;
+        width: 240px !important;
+        height: 48px !important;
+    }
+
+    .topic-result {
+        font-size: 40px !important;
+        font-weight: 700 !important;
+        text-align:left !important;
+    }
+
+
 }
 
 @media (max-width: 1100px) {
     .birdcontent {
-        padding-top: 10px !important;
+        padding-top: 10px !important; 
         justify-content: center;
     }
 
     .imgcontent {
         padding-top: 10px !important;
+    }
+
+    .nav-link{
+        font-size:16px !important;
     }
 }
 
@@ -95,16 +112,16 @@ html {
     .nav-link {
         font-family: Arial;
         font-weight: 700;
-        font-size: 22px;
+        font-size: 20px;
         line-height: 50px;
         color: #1B4332 !important;
         padding-right: 1.5rem !important;
         padding-bottom: 0;
     }
 
-    .navbar-nav {
-        padding-top: 45px;
-    }
+        .navbar-nav {
+            padding-top: 45px;
+        }
 
     .navbar-toggler-icon {
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(0, 0, 0, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
@@ -134,13 +151,12 @@ html {
         font-weight: 300;
     }
 
-    .btn-img {
-        color: #EB8E34;
-        font-weight: 700;
-        font-size: 24px;
-        width: 334px;
-        height: 64px;
-    }
+.btn-img {
+    color: #EB8E34;
+    font-weight: 700;
+    font-size: 24px;
+    width: 334px;
+}
 
     .howworkcontent {
         padding-left: calc((100% - 991px) / 2);
@@ -186,6 +202,107 @@ html {
     .imgcontent {
         padding-top: 50px;
     }
+.banner-area {
+    background: #FFFFFF;
+    width: 837px;
+    min-height: 450px; /* change to min-height */
+    border-radius: 20px;
+}
+    .banner-area h2 {
+        font-weight: 700;
+        font-size: 20px;
+        color: #738687;
+    }
+
+    .banner-area p {
+        color: #738687;
+        font-weight:500;
+    }
+.banner-image-about {
+    object-fit: cover;
+    width: 100%;
+    height: 100%; /* add height: 100% */
+}
+.image-container {
+    position: relative;
+    width: 100%;
+    height: 100%; /* You can adjust the height as needed */
+ 
+}
+
+    .image-container img {
+        max-width: 100%;
+        max-height: 100%;
+
+    }
+.Recognise-banner-content h1 {
+    font-weight: 700;
+    font-size: 40px;
+}
+
+.Recognise-banner-content h2 {
+    font-weight: 700;
+    font-size: 20px;
+    color: #738687;
+}
+.custom-file-label {
+    display: inline-flex; /* Change from inline-block to inline-flex */
+    align-items: center; /* Add this line to vertically center the text */
+    justify-content: center; /* Add this line to horizontally center the text */
+    padding: 6px 12px;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.5;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: #EB8E34;
+    border: 1px solid transparent;
+    border-radius: 30px;
+    color: white;
+    width: 308px;
+    height: 60px;
+}
+    .custom-file-label:hover {
+        background-color: #FEB700;
+    }
+    .footer {
+        position: relative !important;
+    }
+
+.btn-primary {
+    background: #EB8E34;
+    border: none;
+    border-radius: 30px;
+}
+
+    .btn-primary:hover {
+        background: #FEB700;
+        border: none;
+    }
+.btn-secondary {
+    border-radius: 30px;
+}
+
+.predict-image {
+    max-width: 100%;
+    height: auto;
+    width: 250px;
+    border-radius: 30px;
+}
+
+.bird-name {
+    font-weight: 700;
+    font-size: 24px;
+    color: #1B4332;
+}
+.bird-probability {
+    font-weight: 700;
+    font-size: 24px;
+    color: #1B4332;
+}
 
 
 

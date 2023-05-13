@@ -1,94 +1,161 @@
-﻿
-@*@model IndexModel*@
-@{
-    ViewData["Title"] = "Recognise bird species";
-}
-@*<style>
-    #headerDiv {
-        color: blue;
-        text-align: center;
-    }
-
-</style>*@
-
-@*<div id="headerDiv"><h2>TensorFlow Image Classification</h2></div>*@
-<br />
-<div>
-    <form method="post" asp-action="ClassifyImage" enctype="multipart/form-data">
-        <div>
-            <p>Upload a file image using this form to predict the bird species:</p>
+﻿<!-- HTML -->
+<div class="col-md-12 p-0">
+    <div class="Recognise-banner-content position-relative">
+        <img src="~/image/Recognise banner 1.jpg" class="banner-image" alt="banner">
+        <div class="banner-text position-absolute top-50 start-50 translate-middle text-center">
+            <h1>Start your journey of identification</h1>
+            <h2 class="p-3">Select your image from your device</h2>
+            <label for="fileInput" class="custom-file-label">Add an image ></label>
+            <input type="file" name="imageFile" id="fileInput" class="custom-file-input" onchange="openCropModal()" style="display: none;">
         </div>
-        <div>
-            <input type="file" name="imageFile" id="fileInput" onchange="previewImage()">
-        </div>
-        <div>
-            <br />
-            <input type="submit" value="Recognise" name="submit">
-        </div>
-
-    </form>
+    </div>
 </div>
-<br />
-<br />
-<div class="row">
-    <div class="col-md-4">
-        <h4> Uploaded Image</h4>
-        <img id="previewImage" src="#" alt="Preview Image" width="250" height="250"/>
+<!-- form for submit the data -->
+<form id="resultForm" action="/Result" method="post" style="display: none;" enctype="multipart/form-data">
+    <input type="hidden" id="prediction0" name="prediction0" />
+    <input type="hidden" id="probability0" name="probability0" />
+    <input type="hidden" id="generalInf0" name="generalInf0" />
+    <input type="hidden" id="prediction1" name="prediction1" />
+    <input type="hidden" id="probability1" name="probability1" />
+    <input type="hidden" id="generalInf1" name="generalInf1" />
+    <input type="hidden" id="prediction2" name="prediction2" />
+    <input type="hidden" id="probability2" name="probability2" />
+    <input type="hidden" id="generalInf2" name="generalInf2" />
+    <input type="hidden" id="croppedImageDataUrl" name="croppedImageDataUrl" />
+</form>
+
+
+<div class="clearfix"></div>
+<!-- The Modal -->
+<div class="modal fade" id="cropModal" tabindex="-1" role="dialog" aria-labelledby="cropModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="cropModalLabel">Crop Image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="image-container">
+                    <img id="imageToCrop" src="#" alt="Preview Image" />
+                </div>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="recogniseCroppedImage()">Recognise</button>
+            </div>
+
+        </div>
     </div>
 </div>
 
-<h4 id="result_title">Predicted Bird species:</h4>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Label</th>
-            <th>Probability</th>
-            <th>GeneralInfo</th>
-        </tr>
-    </thead>
-    <tbody>
-      <tr>
-            <td id="divPrediction0"></td>
-            <td id="divProbability0"></td>
-            <td id="divGeneralInf0"></td>
-      </tr>
-      <tr>
-            <td id="divPrediction1"></td>
-            <td id="divProbability1"></td>
-            <td id="divGeneralInf1"></td>
-      </tr>
-        <tr>
-            <td id="divPrediction2"></td>
-            <td id="divProbability2"></td>
-            <td id="divGeneralInf2"></td>
-        </tr>
-    </tbody>
-</table>
 
-<script src="~/js/upload.js"></script>
-
-<br />
-<br />
-<br />
 
 <script type="text/javascript">
-    window.onload = function hello() {
-        document.getElementById('divPrediction').innerHTML = "";
-        
-    };
+    
+    let cropper;
+    // Cropper photo
+    document.getElementById('cropModal').addEventListener('shown.bs.modal', function () {
+        if (cropper) {
+            cropper.destroy();
+        }
 
-    function previewImage() {
-        var preview = document.querySelector('#previewImage');
+        const preview = document.querySelector('#imageToCrop');
+        cropper = new Cropper(preview, {
+            aspectRatio: 1,
+            viewMode: 1,
+            autoCropArea: 1,
+            cropBoxResizable: false,
+            minCanvasWidth: 224,
+            minCanvasHeight: 224,
+            minCropBoxWidth: 224,
+            minCropBoxHeight: 224,
+            toggleDragModeOnDblclick: false,
+            responsive: true,
+            checkCrossOrigin: false,
+            checkOrientation: false,
+        });
+    });
+
+    function openCropModal() {
         var file = document.querySelector('#fileInput').files[0];
         var reader = new FileReader();
 
         reader.addEventListener("load", function () {
+            var preview = document.querySelector('#imageToCrop');
             preview.src = reader.result;
+
+            // Show crop modal
+            $('#cropModal').modal('show');
         }, false);
 
         if (file) {
             reader.readAsDataURL(file);
         }
     }
+
+    function recogniseCroppedImage() {
+
+        
+        const serviceUrl = 'api/RecogniseAPI/classifyImage';
+        if (cropper) {
+            // Get cropped image data
+            const croppedCanvas = cropper.getCroppedCanvas();
+            const croppedImageDataUrl = croppedCanvas.toDataURL();
+
+
+            // Convert the data URL to a Blob object
+            const croppedImageBlob = dataURLToBlob(croppedImageDataUrl);
+
+            // Create a new FormData object and append the cropped image Blob
+            const formData = new FormData();
+            formData.append('imageFile', croppedImageBlob);
+
+            // Send the FormData object to the API and process the response
+            // Send the FormData object to the API and process the response
+            // Send the FormData object to the API and process the response
+            fetch(serviceUrl, {
+                method: 'POST',
+                body: formData
+            })
+                .then((resp) => resp.json())
+                .then(function (response) {
+                    const predictionsCount = response.length;
+                    for (let i = 0; i < predictionsCount; i++) {
+                        document.getElementById(`prediction${i}`).value = response[i].predictedLabel;
+                        document.getElementById(`probability${i}`).value = (response[i].probability * 100).toFixed(2) + "%";
+                        document.getElementById(`generalInf${i}`).value = response[i].generalInfo;
+                    }
+
+                    document.getElementById('croppedImageDataUrl').value = croppedImageDataUrl;
+
+                    // submit the form
+                    document.getElementById('resultForm').submit();
+                });
+
+
+
+            // Close the modal
+            $('#cropModal').modal('hide');
+
+            console.log(sessionStorage.getItem('croppedImageDataUrl'));
+        }
+    }
+    function dataURLToBlob(dataUrl) {
+        const byteString = atob(dataUrl.split(',')[1]);
+        const mimeString = dataUrl.split(',')[0].split(':')[1].split(';')[0];
+        const buffer = new ArrayBuffer(byteString.length);
+        const view = new Uint8Array(buffer);
+
+        for (let i = 0; i < byteString.length; i++) {
+            view[i] = byteString.charCodeAt(i);
+        }
+
+        return new Blob([buffer], { type: mimeString });
+    }
+
+
 </script>

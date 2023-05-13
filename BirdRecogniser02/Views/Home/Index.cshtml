@@ -2,14 +2,16 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="row no-gutter" style="margin-right:0;">
+<div class="row no-gutter p-0 m-0">
     <div class="col-md-12 p-0">
         <div class="position-relative">
             <img src="~/image/homebanner1.png" class="banner-image" alt="banner">
             <div class="banner-text position-absolute top-50 start-50 translate-middle text-center">
                 <h1 class="text-white">Discover 510+ Bird Species</h1>
                 <h2 class="text-white">Become A Total Bird Expert, by Browsing Our Species Database!</h2>
-                <button class="btn bg-white shadow rounded-pill btn-img">Add an image</button>
+                <a class="btn bg-white shadow rounded-pill btn-img text-center" asp-controller="RecogniseDemo" asp-action="Index">Start to recognise</a>
+
+
             </div>
         </div>
     </div>
