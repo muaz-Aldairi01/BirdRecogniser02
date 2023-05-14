@@ -14,6 +14,8 @@ using BirdRecogniser02.Authorization;
 
 namespace BirdRecogniser02.Controllers
 {
+
+
     public class SubmissionsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -166,9 +168,15 @@ namespace BirdRecogniser02.Controllers
                 //------------------------------------------------------------------------
                 _context.Add(submission);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                return RedirectToAction("Thanks");
             }
             return View(submission);
+        }
+        //create thanks return view
+        public IActionResult Thanks()
+        {
+            return View();
         }
 
         // GET: Submissions/Edit/5

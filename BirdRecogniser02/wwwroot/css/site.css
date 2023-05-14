@@ -276,6 +276,7 @@ html {
     background: #EB8E34;
     border: none;
     border-radius: 30px;
+    filter: drop-shadow(2px 2px 20px rgba(0, 0, 0, 0.1));
 }
 
     .btn-primary:hover {
@@ -304,6 +305,60 @@ html {
     color: #1B4332;
 }
 
+.contribute-top {
+    background: #E7EEED;
+    font-weight: 700;
+    font-size: 40px;
+    color: #1B4332;
+}
 
+.form-control {
+    background: #EFEFEF;
+    border-radius: 30px;
+}
+
+.preview-img {
+    width: 100px;
+    border-radius: 30px;
+    margin-left:10%;
+}
+
+.hidden{
+    display:none;
+}
+
+.fileInput-button {
+    border-radius: 15px;
+    background: #E7EEED;
+    width: 300px;
+    height: 38px;
+    border: 1px solid #ccc;
+    color: #1B4332;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .fileInput-button:hover {
+        background: #D1E1D3;
+    }
+
+.btn-create-bird {
+    filter: drop-shadow(2px 2px 20px rgba(0, 0, 0, 0.1));
+    width: 258px;
+    height: 40px;
+    font-weight: 700;
+}
+
+.ThanksBG {
+    z-index: -1;
+    object-fit: cover;
+    width:100%;
+}
+
+.ThanksContent{
+    z-index:1;
+}
 
 
