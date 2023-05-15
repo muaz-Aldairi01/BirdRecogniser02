@@ -82,6 +82,45 @@ namespace BirdRecogniser02.Controllers
             //==============================================================================
         }
 
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [Route("birdsinfo")]
+        [AllowAnonymous]
+
+        public async Task<IActionResult> GetBirdsInfo(string birdNames)
+        {
+            if (birdNames.Length == 0)
+                return BadRequest();
+
+            var names = birdNames.ToUpper().Split(',');
+            List<BirdInformation> information = new List<BirdInformation>();
+
+            List<string> columnValues = new List<string>();
+
+            using (var reader = new StreamReader("wwwroot/general/general.csv"))
+            {
+
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(',');
+                    var name = values[0].ToUpper();
+                    if (names.Contains(name))
+                    {
+                        BirdInformation information1 = new BirdInformation();
+                        information1.PredictedLabel = name;
+                        information1.GeneralInfo = values[1];
+                        information.Add(information1);
+                    }
+                }
+            }
+
+
+            return Ok(information.ToArray());
+            //==============================================================================
+        }
+
         //===========================================================================
         private List<ImagePredictedLabelWithProbability> FindBest3LabelsWithProbability(ImageLabelPrediction imageLabelPredictions, ImageInputData imageInputData)
         {
