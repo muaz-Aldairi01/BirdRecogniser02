@@ -4,65 +4,71 @@
     ViewData["Title"] = "Edit Submission";
 }
 
+<div class="EditSubmission position-relative text-center">
+    <h1 class="p-3"> Edit Submission</h1>
+    <hr />
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-4 m-3">
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="SubmissionId" />
+                <div class="form-group m-3">
+                    <label asp-for="BirdName" class="control-label"></label>
+                    <input asp-for="BirdName" class="form-control" />
+                    <span asp-validation-for="BirdName" class="text-danger"></span>
+                </div>
+                <div class="form-group m-3">
+                    <label asp-for="BirdInformation" class="control-label"></label>
+                    <input asp-for="BirdInformation" class="form-control" />
+                    <span asp-validation-for="BirdInformation" class="text-danger"></span>
+                </div>
+                @*<div class="form-group">
+                <label asp-for="FileName" class="control-label"></label>
+                <input asp-for="FileName" class="form-control" />
+                <span asp-validation-for="FileName" class="text-danger"></span>
+                </div>*@
+                <div class="form-group">
+                    <label asp-for="BirdImage" class="control-label"></label>
+                    <input asp-for="BirdImage" accept="image/*" id="fileInput" onchange="previewImage()" />
+                    <span asp-validation-for="BirdImage" class="text-danger"></span>
+                </div>
+                <div class="form-group d-flex justify-content-center align-items-center">
+                    <input type="submit" value="Save" class="btn text-center fileInput-button align-self-center m-3" style="line-height: normal;" />
+                    <a class="btn text-center fileInput-button m-3 position-relative d-flex justify-content-center align-items-center" asp-action="Index" style="margin-top: auto; margin-bottom: auto;">Go Back</a>
+                </div>
 
-<h4> Edit Submission</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="SubmissionId" />
-            <div class="form-group">
-                <label asp-for="BirdName" class="control-label"></label>
-                <input asp-for="BirdName" class="form-control" />
-                <span asp-validation-for="BirdName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BirdInformation" class="control-label"></label>
-                <input asp-for="BirdInformation" class="form-control" />
-                <span asp-validation-for="BirdInformation" class="text-danger"></span>
-            </div>
-            @*<div class="form-group">
-            <label asp-for="FileName" class="control-label"></label>
-            <input asp-for="FileName" class="form-control" />
-            <span asp-validation-for="FileName" class="text-danger"></span>
-            </div>*@
-            <div class="form-group">
-                <label asp-for="BirdImage" class="control-label"></label>
-                <input asp-for="BirdImage" accept="image/*" id="fileInput" onchange="previewImage()" />
-                <span asp-validation-for="BirdImage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+
+
+            </form>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <h4> Uploaded Image</h4>
-        <img id="previewImage" src="#" alt="Preview Image" />
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-4">
+            <h4> Uploaded Image</h4>
+            <img id="previewImage" src="#" alt="Preview Image" />
+        </div>
     </div>
-</div>
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    @*<div>
+        <a asp-action="Index">Back to List</a>
+    </div>*@
 
-<script>
-    function previewImage() {
-        var preview = document.querySelector('#previewImage');
-        var file = document.querySelector('#fileInput').files[0];
-        var reader = new FileReader();
 
-        reader.addEventListener("load", function () {
-            preview.src = reader.result;
-        }, false);
+    <script>
+        function previewImage() {
+            var preview = document.querySelector('#previewImage');
+            var file = document.querySelector('#fileInput').files[0];
+            var reader = new FileReader();
 
-        if (file) {
-            reader.readAsDataURL(file);
+            reader.addEventListener("load", function () {
+                preview.src = reader.result;
+            }, false);
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
         }
-    }
-</script>
+    </script>
+</div>
 
 @section Scripts {
     @{

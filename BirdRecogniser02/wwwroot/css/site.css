@@ -290,6 +290,9 @@ body {
 
 .btn-secondary {
     border-radius: 30px;
+    border: none;
+    border-radius: 30px;
+    filter: drop-shadow(2px 2px 20px rgba(0, 0, 0, 0.1));
 }
 
 .predict-image {
@@ -364,4 +367,11 @@ body {
 
 .ThanksContent {
     z-index: 1;
+}
+
+.create-button {
+    background: #1B4332;
+    border-radius: 20px;
+    font-size: 20px;
+    color: #FFFFFF;
 }
