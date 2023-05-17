@@ -33,7 +33,6 @@ namespace BirdRecogniser02.Controllers
         [ProducesResponseType(400)]
         [Route("classifyimage")]
         [AllowAnonymous]
-
         public async Task<IActionResult> ClassifyImage(IFormFile imageFile)
         {
             if (imageFile.Length == 0)
@@ -69,20 +68,12 @@ namespace BirdRecogniser02.Controllers
             var elapsedMs = watch.ElapsedMilliseconds;
             _logger.LogInformation($"Image processed in {elapsedMs} miliseconds");
 
-            // Predict the image's label (The one with highest probability).
-            //ImagePredictedLabelWithProbability imageBestLabelPrediction
-            //                    = FindBestLabelWithProbability(imageLabelPredictions, imageInputData);
-
-            //return Ok(imageBestLabelPrediction);
-
-            //============================================================================
+            // Predict the images' labels (Three with highest probability).
             var imageBest3LabelsPrediction
                                   = FindBest3LabelsWithProbability(imageLabelPredictions, imageInputData);
             return Ok(imageBest3LabelsPrediction);
-            //==============================================================================
+            
         }
-
-        //===========================================================================
         private List<ImagePredictedLabelWithProbability> FindBest3LabelsWithProbability(ImageLabelPrediction imageLabelPredictions, ImageInputData imageInputData)
         {
             // Read TF model's labels (labels.txt) to classify the image across those labels.
@@ -90,7 +81,6 @@ namespace BirdRecogniser02.Controllers
 
             float[] probabilities = imageLabelPredictions.PredictedLabels;
 
-            //========================================================
             
             List<string> columnValues = new List<string>();
 
@@ -106,7 +96,6 @@ namespace BirdRecogniser02.Controllers
                 }    
             }
             string[] generalInfos = columnValues.ToArray();
-            //========================================================
 
             var imageBest3LabelsPrediction = new List<ImagePredictedLabelWithProbability>(3);
             for (int i = 0; i < 3; i++)

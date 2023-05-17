@@ -21,16 +21,17 @@ namespace BirdRecogniser02.Models
         [Required]
         [DisplayName("Bird Information")]
         [StringLength(500, MinimumLength = 3)]
-        //[RegularExpression(@"^(?<startString>\S+).*", ErrorMessage = "Bird information should start with a string.")]
-        [RegularExpression(@"^[a-zA-Z0-9\s\.\-\,]+$", ErrorMessage = "Bird information should only contain alphanumeric characters, spaces, periods, commas, and hyphens.")]
+        [RegularExpression(@"^[a-zA-Z\s\.\-\,]+$", ErrorMessage = "Bird information should only contain alphanumeric characters, spaces, periods, commas, and hyphens.")]
         public string? BirdInformation { get; set; }
 
         [DisplayName("File Name")]
         public string? FileName { get; set; }
 
-        //[Required]// this attribute should be enabled once Zong create a form that send an image
+        [Required]// this attribute should be enabled once Zong create a form that send an image
         [NotMapped]
         [DisplayName("Bird Image")]
+        [DataType(DataType.Upload)]
+        [RegularExpression(@"\.(jpg|jpeg|png|gif)$", ErrorMessage = "Only image files (jpg, jpeg, png, gif) are allowed.")]
         public IFormFile? BirdImage { get; set; }
 
         public SubmissionStatus Status { get; set; }
