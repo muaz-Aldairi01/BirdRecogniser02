@@ -3,79 +3,100 @@
 @{
     ViewData["Title"] = "Details of the Submission";
 }
+<h1 class="text-center p-3">Submission Details</h1>
+<hr />
+<div class="DetailSubmission position-relative d-flex justify-content-center">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.BirdName)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.BirdName)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.BirdInformation)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.BirdInformation)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.FileName)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.FileName)
+                        </dd>
+                        <dt class="col-sm-4">
+                            Uploaded Image:
+                        </dt>
+                        <dd class="col-sm-8">
+                            <img decoding="async" src="@("~/photos/"+Model.FileName)" asp-append-version="true" width="250px" height="250px" />
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Status)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Status)
+                        </dd>
+                    </dl>
 
-<div>
-    <h4>Submission Details</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BirdName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BirdName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BirdInformation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BirdInformation)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FileName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FileName)
-        </dd>
-        <dt class="col-sm-2">
-            Uploaded Image:
-        </dt>
-        <dd class="col-sm-10">
-            <img decoding="async" src="@("~/photos/"+Model.FileName)" asp-append-version="true" width="250px" height="250px" />
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
-</div>
+                @if (Model.Status != SubmissionStatus.Approved)
+                {
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Model, SubmissionOperations.Approve)).Succeeded)
+                    {
+                        <div class="d-flex justify-content-center mt-3">
+                            <form style="display: inline;" method="post" class="text">
+                                <input type="hidden" name="id" value="@Model.SubmissionId" />
+                                <input type="hidden" name="status" value="@SubmissionStatus.Approved" />
+                                <button type="submit" class="btn btn-xs btn-primary">Approve</button>
+                            </form>
+                        </div>
+                    }
+                }
 
-@if (Model.Status != SubmissionStatus.Approved)
-{
-    @if ((await AuthorizationService.AuthorizeAsync(
-   User, Model, SubmissionOperations.Approve)).Succeeded)
-    {
-        <form style="display:inline;" method="post">
-            <input type="hidden" name="id" value="@Model.SubmissionId" />
-            <input type="hidden" name="status" value="@SubmissionStatus.Approved" />
-            <button type="submit" class="btn btn-xs btn-success">Approve</button>
-        </form>
-    }
-}
+                @if (Model.Status != SubmissionStatus.Rejected)
+                {
+                    @if ((await AuthorizationService.AuthorizeAsync(User, Model, SubmissionOperations.Reject)).Succeeded)
+                    {
+                        <div class="d-flex justify-content-center mt-3">
+                            <form style="display: inline;" method="post">
+                                <input type="hidden" name="id" value="@Model.SubmissionId" />
+                                <input type="hidden" name="status" value="@SubmissionStatus.Rejected" />
+                                <button type="submit" class="btn btn-xs btn-secondary">Reject</button>
+                            </form>
+                        </div>
+                    }
+                }
 
-@if (Model.Status != SubmissionStatus.Rejected)
-{
-    @if ((await AuthorizationService.AuthorizeAsync(
-   User, Model, SubmissionOperations.Reject)).Succeeded)
-    {
-        <form style="display:inline;" method="post">
-            <input type="hidden" name="id" value="@Model.SubmissionId" />
-            <input type="hidden" name="status" value="@SubmissionStatus.Rejected" />
-            <button type="submit" class="btn btn-xs btn-danger">Reject</button>
-        </form>
-    }
-}
+                <div class="row d-flex justify-content-center mt-3">
+                    <div class="d-flex">
+                        @if ((await AuthorizationService.AuthorizeAsync(User, Model, SubmissionOperations.Update)).Succeeded)
+                        {
+                            <input type="button" value="Edit" class="fileInput-button m-3 d-inline" onclick="location.href='@Url.Action("Edit", new { id = Model.SubmissionId })'" />
+                        }
+                        <input type="button" value="Back to List" class="fileInput-button m-3 d-inline" onclick="location.href='@Url.Action("Index")'" />
+                    </div>
+                </div>
 
-<div>
-    @if ((await AuthorizationService.AuthorizeAsync(
-    User, Model,
-    SubmissionOperations.Update)).Succeeded)
-    {
-        <a asp-action="Edit" asp-route-id="@Model.SubmissionId">Edit</a>
-        <text> | </text>
-    }
-    <a asp-action="Index">Back to List</a>
+
+                    @*<div>
+                        @if ((await AuthorizationService.AuthorizeAsync(
+                        User, Model,
+                        SubmissionOperations.Update)).Succeeded)
+                        {
+                            <br>
+                            <a class="fileInput-button p-1" asp-action="Edit" asp-route-id="@Model.SubmissionId">Edit</a>
+                            <text> | </text>
+                        }
+                        <a class="fileInput-button p-1" asp-action="Index">Back to List</a>
+                    </div>*@
+
+                </div>
+            </div>
+
+    </div>
 </div>
 @*<div>
     <a asp-action="Edit" asp-route-id="@Model?.SubmissionId">Edit</a> |

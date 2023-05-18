@@ -3,74 +3,76 @@
 @{
     ViewData["Title"] = "Submissions List";
 }
+<div class="Submitlist position-relative">
+    <h1 class="text-center">Submissions List</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.BirdName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BirdInformation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FileName)
+                </th>
+                <th>
+                    Bird Image
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th>
+                    Your options
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BirdName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BirdInformation)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FileName)
+                    </td>
+                    <td>
+                        <img decoding="async" src="@("~/photos/"+item.FileName)" asp-append-version="true" width="75px" height="75px" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @if ((await AuthorizationService.AuthorizeAsync(
+                       User, item,
+                       SubmissionOperations.Update)).Succeeded)
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.SubmissionId">Edit</a>
+                            <text> | </text>
+                        }
 
-<h1>Index</h1>
+                        <a asp-action="Details" asp-route-id="@item.SubmissionId">Details</a>
 
-<p>
-    <a asp-action="Create">Submit new bird species</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.BirdName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BirdInformation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FileName)
-            </th>
-            <th>
-                Bird Image
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                Your options
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.BirdName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BirdInformation)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FileName)
-            </td>
-            <td>
-                <img decoding="async" src="@("~/photos/"+item.FileName)" asp-append-version="true" width="75px" height="75px" />
-            </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @if ((await AuthorizationService.AuthorizeAsync(
-                   User, item,
-                   SubmissionOperations.Update)).Succeeded)
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.SubmissionId">Edit</a>
-                        <text> | </text>
-                    }
+                        @if ((await AuthorizationService.AuthorizeAsync(
+                       User, item,
+                       SubmissionOperations.Delete)).Succeeded)
+                        {
+                            <text> | </text>
+                            <a asp-action="Delete" asp-route-id="@item.SubmissionId">Delete</a>
+                        }
+                    </td>
 
-                    <a asp-action="Details" asp-route-id="@item.SubmissionId">Details</a>
-
-                    @if ((await AuthorizationService.AuthorizeAsync(
-                   User, item,
-                   SubmissionOperations.Delete)).Succeeded)
-                    {
-                        <text> | </text>
-                        <a asp-action="Delete" asp-route-id="@item.SubmissionId">Delete</a>
-                    }
-                </td>
-            
-        </tr>
-}
-    </tbody>
-</table>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="form-group p-3 d-flex justify-content-center">
+        <a class="btn text-center fileInput-button p-3 position-relative d-flex justify-content-center" asp-action="Create">Create a new bird</a>
+    
+</div>
+</div>
