@@ -69,7 +69,7 @@ using (var scope = app.Services.CreateScope())
     // Set password with the Secret Manager tool.
     // dotnet user-secrets set SeedUserPW <pw>
 
-    var testUserPw = "Bird$Recogniser2023";//builder.Configuration.GetValue<string>("SeedUserPW");
+    var testUserPw = builder.Configuration.GetValue<string>("SeedUserPW");//"Bird$Recogniser2023";
 
     await SeedData.Initialize(services, testUserPw);
 }

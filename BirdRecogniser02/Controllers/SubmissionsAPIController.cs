@@ -88,9 +88,6 @@ namespace BirdRecogniser02.Controllers
         // POST: api/SubmissionsAPI
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        //[ProducesResponseType(200)]
-        //[ProducesResponseType(400)]
-        //[Route("submitBird")]
         public async Task<ActionResult<Submission>> PostSubmission(Submission submission)
         {
           if (_context.Submission == null)
