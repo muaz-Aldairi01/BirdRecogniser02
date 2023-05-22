@@ -38,7 +38,7 @@ builder.Services.AddOptions<PredictionEnginePoolOptions<ImageInputData, ImageLab
     {
         options.ModelLoader = new InMemoryModelLoader(_mlnetModel);
     });
-    
+
 builder.Services.AddAuthorization(options =>
 {
     options.FallbackPolicy = new AuthorizationPolicyBuilder()
