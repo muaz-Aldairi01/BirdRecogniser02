@@ -14,17 +14,17 @@
                     <img class="predict-image" src="@ViewData["CroppedImageDataUrl"]" alt="Cropped Image" />
                 </div>
                 <div class="g-inf-content col-md-9 ">
-                    <p class="bird-name">Possible bird species: @ViewData["Prediction0"]</p>
+                    <p class="bird-name">First possible bird: @ViewData["Prediction0"]</p>
                     <p class="bird-probability">Probability: @ViewData["Probability0"]</p>
                     <p>General Information: @ViewData["GeneralInf0"]</p>
                     <hr />
                     @if (probability0 < 0.8)
                     {
-                        <p class="bird-name">Possible bird species: @ViewData["Prediction1"]</p>
+                        <p class="bird-name">Second possible bird: @ViewData["Prediction1"]</p>
                         <p class="bird-probability">Probability: @ViewData["Probability1"]</p>
                         <p>General Information: @ViewData["GeneralInf1"]</p>
                         <hr />
-                        <p class="bird-name">Predicted label is: @ViewData["Prediction2"]</p>
+                        <p class="bird-name">Third possible bird: @ViewData["Prediction2"]</p>
                         <p class="bird-probability">Probability: @ViewData["Probability2"]</p>
                         <p>General Information: @ViewData["GeneralInf2"]</p>
                     }
