@@ -27,11 +27,21 @@
                 <input asp-for="FileName" class="form-control" />
                 <span asp-validation-for="FileName" class="text-danger"></span>
                 </div>*@
-                <div class="form-group">
+                @*<div class="form-group">
                     <label asp-for="BirdImage" class="control-label"></label>
                     <input asp-for="BirdImage" accept="image/*" id="fileInput" onchange="previewImage()" />
                     <span asp-validation-for="BirdImage" class="text-danger"></span>
+                </div>*@
+                <div class="form-group p-3 d-flex align-items-center">
+                    <label asp-for="BirdImage" class="control-label" style="display: none;"></label>
+                    <label for="fileInput" class="fileInput-button">
+                        Update bird image >
+                    </label>
+                    <input asp-for="BirdImage" type="file" id="fileInput" accept="image/*" onchange="openCropModal()" style="display: none;" />
+                    <span asp-validation-for="BirdImage" class="text-danger"></span>
+                    <img class="preview-img hidden" id="previewImage" src="~/image/Update icon grey.png" alt="Preview Image" />
                 </div>
+
                 <div class="form-group d-flex justify-content-center align-items-center">
                     <input type="submit" value="Save" class="btn text-center fileInput-button align-self-center m-3" style="line-height: normal;" />
                     <a class="btn text-center fileInput-button m-3 position-relative d-flex justify-content-center align-items-center" asp-action="Index" style="margin-top: auto; margin-bottom: auto;">Go Back</a>
@@ -42,18 +52,18 @@
             </form>
         </div>
     </div>
-    <div class="row d-flex justify-content-center">
+@*    <div class="row d-flex justify-content-center">
         <div class="col-md-4">
             <h4> Uploaded Image</h4>
             <img id="previewImage" src="#" alt="Preview Image" />
         </div>
-    </div>
+    </div>*@
     @*<div>
         <a asp-action="Index">Back to List</a>
     </div>*@
 
 
-    <script>
+    @*<script>
         function previewImage() {
             var preview = document.querySelector('#previewImage');
             var file = document.querySelector('#fileInput').files[0];
@@ -68,7 +78,101 @@
             }
         }
     </script>
-</div>
+</div>*@
+    <!-- The Modal -->
+    <div class="modal fade" id="cropModal" tabindex="-1" role="dialog" aria-labelledby="cropModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cropModalLabel">Crop Image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="image-container">
+                        <img id="imageToCrop" src="#" alt="Preview Image" />
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="showCroppedImage()">Crop</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    @*<div>
+    <a asp-action="Index">Back to List</a>
+    </div>*@
+
+    <script>
+
+        let cropper;
+        // Cropper photo
+        document.getElementById('cropModal').addEventListener('shown.bs.modal', function () {
+            if (cropper) {
+                cropper.destroy();
+            }
+
+            const preview = document.querySelector('#imageToCrop');
+            cropper = new Cropper(preview, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 1,
+                cropBoxResizable: false,
+                minCanvasWidth: 224,
+                minCanvasHeight: 224,
+                minCropBoxWidth: 224,
+                minCropBoxHeight: 224,
+                toggleDragModeOnDblclick: false,
+                responsive: true,
+                checkCrossOrigin: false,
+                checkOrientation: false,
+            });
+        });
+
+        function openCropModal() {
+            var file = document.querySelector('#fileInput').files[0];
+            var reader = new FileReader();
+
+            reader.addEventListener("load", function () {
+                var preview = document.querySelector('#imageToCrop');
+                preview.src = reader.result;
+
+                // Show crop modal
+                $('#cropModal').modal('show');
+            }, false);
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function showCroppedImage() {
+            // Get the cropped image data
+            var croppedCanvas = cropper.getCroppedCanvas();
+
+            // If the cropping was successful
+            if (croppedCanvas) {
+                // Convert the canvas to a data URL
+                var croppedDataURL = croppedCanvas.toDataURL("image/png");
+
+                // Set the preview image's src to the data URL
+                var previewImage = document.querySelector('#previewImage');
+                previewImage.src = croppedDataURL;
+            }
+            // Remove the 'hidden' class from the preview image
+            previewImage.classList.remove('hidden');
+
+            // Close the modal
+            $('#cropModal').modal('hide');
+        }
+
+    </script>
 
 @section Scripts {
     @{
