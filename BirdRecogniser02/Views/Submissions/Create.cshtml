@@ -13,7 +13,7 @@
         <img src="~/image/grass.png" class="img-fluid" alt="Grass">
     </div>
     <div class="col-lg-6">
-        <p>In order to enhance the performance of this app, it is necessary to train the AI model on a wider range of bird species. You can assist us in expanding our knowledge by providing information about additional bird species. Please fill out the form provided to contribute valuable data.</p>
+        <p class="p-3"style= "text-align: justify; text-justify: inter-word;">In order to enhance the performance of this app, it is necessary to train the AI model on a wider range of bird species. You can assist us in expanding our knowledge by providing information about additional bird species. Please fill out the form provided to contribute valuable data.</p>
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group p-3">
@@ -36,13 +36,20 @@
                 <img class="preview-img hidden" id="previewImage" src="~/image/Update icon grey.png" alt="Preview Image" />
             </div>
 
-            <div class="form-group p-3 d-flex justify-content-center">
-                <input type="submit" value="Create New >" class="btn btn-primary btn-create-bird" />
+            <div class="row">
+                <div class="form-group p-3 d-flex justify-content-center">
+                    <input type="submit" value="Create New >" class="btn btn-primary btn-create-bird" />
+                    <div style="width: 10px;"></div>
+                    <a asp-area="" asp-controller="Submissions" asp-action="Index" class="ml-2">
+                        <input type="button" value="Check list >" class="btn btn-primary btn-create-bird" />
+                    </a>
+                </div>
             </div>
+
         </form>
     </div>
     <div class="col-3 d-none d-lg-block">
-        <img src="~/image/grass3.png" class="img-fluid" alt="Grass 3">
+        <img src="~/image/grass3.png" class="img-fluid float-right" alt="Grass 3">
     </div>
 </div>
 

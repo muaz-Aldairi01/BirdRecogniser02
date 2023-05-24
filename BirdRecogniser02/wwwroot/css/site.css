@@ -110,7 +110,7 @@ body {
 .nav-link {
     font-family: Arial;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 16px;
     line-height: 50px;
     color: #1B4332 !important;
     padding-right: 1.5rem !important;
@@ -351,6 +351,24 @@ body {
 
     .fileInput-button:hover {
         background: #D1E1D3;
+    }
+
+.fileInput-button2 {
+    border-radius: 15px;
+    background: #DC3545;
+    width: 300px;
+    height: 38px;
+    border: 1px solid #ccc;
+    color: #FFFFFF;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .fileInput-button2:hover {
+        background: #C82333;
+        color: #FFFFFF;
     }
 
 .btn-create-bird {
