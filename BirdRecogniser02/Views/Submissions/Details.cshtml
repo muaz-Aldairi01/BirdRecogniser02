@@ -42,6 +42,8 @@
                         </dd>
                     </dl>
 
+                    <div class="row">
+                    <div class="d-flex justify-content-center">
                 @if (Model.Status != SubmissionStatus.Approved)
                 {
                     @if ((await AuthorizationService.AuthorizeAsync(User, Model, SubmissionOperations.Approve)).Succeeded)
@@ -53,6 +55,7 @@
                                 <button type="submit" class="btn btn-xs btn-primary">Approve</button>
                             </form>
                         </div>
+                                <div style="width: 10px;"></div>
                     }
                 }
 
@@ -69,6 +72,8 @@
                         </div>
                     }
                 }
+                </div>
+                </div>
 
                 <div class="row d-flex justify-content-center mt-3">
                     <div class="d-flex">

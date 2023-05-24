@@ -37,14 +37,15 @@
             </div>
 
             <div class="row">
-            <div class="form-group p-3 d-flex justify-content-center">
-                <input type="submit" value="Create New >" class="btn btn-primary btn-create-bird" />
+                <div class="form-group p-3 d-flex justify-content-center">
+                    <input type="submit" value="Create New >" class="btn btn-primary btn-create-bird" />
+                    <div style="width: 10px;"></div>
+                    <a asp-area="" asp-controller="Submissions" asp-action="Index" class="ml-2">
+                        <input type="button" value="Check list >" class="btn btn-primary btn-create-bird" />
+                    </a>
+                </div>
             </div>
-            <div class="form-group p-3 d-flex justify-content-center">
 
-                <input type="button" value="Check list >" asp-controller="Submissions" asp-action="Index" class="btn btn-primary btn-create-bird" />
-            </div>
-            </div>
         </form>
     </div>
     <div class="col-3 d-none d-lg-block">
