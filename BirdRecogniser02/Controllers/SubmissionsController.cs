@@ -51,11 +51,6 @@ namespace BirdRecogniser02.Controllers
                                              s.OwnerID == currentUserId);
             }
 
-            //-----------------------------------------------------------------------
-            //return _context.Submission != null ? 
-            //              View(await _context.Submission.ToListAsync()) :
-            //              Problem("Entity set 'ApplicationDbContext.Submission'  is null.");
-
             return submission != null ?
                    View(await submission.ToListAsync()) :
                    Problem("Entity set 'ApplicationDbContext.Submission'  is null.");
