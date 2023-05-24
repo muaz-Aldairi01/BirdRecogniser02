@@ -31,7 +31,7 @@ namespace BirdRecogniser02.Models
         [NotMapped]
         [DisplayName("Bird Image")]
         [DataType(DataType.Upload)]
-        [RegularExpression(@"\.(jpg|jpeg|png|gif)$", ErrorMessage = "Only image files (jpg, jpeg, png, gif) are allowed.")]
+        //[RegularExpression(@"\.(jpg|jpeg|png|gif)$", ErrorMessage = "Only image files (jpg, jpeg, png, gif) are allowed.")]
         public IFormFile? BirdImage { get; set; }
 
         public SubmissionStatus Status { get; set; }
