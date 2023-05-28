@@ -27,14 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ML\TensorFlowModel\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="ML\TensorFlowModel\Bird-labels.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ML\TensorFlowModel\birds_mobileNetv2_frozen_graph.pb">
+    <None Update="ML\TensorFlowModel\birds_mobileNetv2_frozen_graph_517.pb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
